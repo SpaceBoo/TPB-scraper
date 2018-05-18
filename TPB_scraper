@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+import requests
+import sys
+from bs4 import BeautifulSoup
+import argparse
+import subprocess
+
+#Parse Arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("--search", "-s", help="Provide a search term for TPB")
+parser.add_argument("--results", "-r", nargs='+', help="Specify selected results", type=int, default=[1, 2, 3, 4, 5])
+parser.add_argument("--print", "-p", help="Print the details for selcted search result(s)", action="store_true")
+parser.add_argument("--magnet", "-m", help="Prints the magnet links for selected search result(s)'", action="store_true")
+parser.add_argument("--transmission", "-t", help="Passes selected results to 'transmission-cli' for direct downloading", action="store_true")
+args = parser.parse_args()
+
+#Define search_term
+if args.search:
+    search_term = args.search
+else:
+    search_term = input('search term : ')
+
+#Download Webpage and Parse HTML
+webpage = "https://thepiratebay.org"
+page = requests.get(webpage + "/search/" + search_term)
+soup = BeautifulSoup(page.content, 'html.parser')
+
+#Generate Dictionaries of titles, seeders, leachers, ratios, and magnets
+search_result = 0; titles = {}; seeders = {} ;leachers = {}; ratios = {}; magnets = {} 
+table = soup.find("table", id="searchResult")
+for tr in table.find_all("tr"):
+    for td in tr.find_all("td"):
+        if td.find(class_="detName"):
+            titles[search_result] = (td.find(class_="detName")).get_text()
+            link_order = 1
+            tag_order = 1
+            for link in td.find_all("a"):
+                if link_order == 2:
+                    magnets[search_result] = link.get("href")
+                    break
+                link_order += 1
+        if (td.get("align") == "right"):
+            if tag_order == 1:
+                seeders[search_result] = float(td.get_text())
+            if tag_order == 2:
+                leachers[search_result] = float(td.get_text())
+            tag_order += 1
+    search_result += 1
+for result in range(1,search_result): 
+    if seeders[result] == 0 or leachers[result] == 0:
+        ratios[result] = 0
+    else:
+        ratios[result] = round((seeders[result])/(leachers[result]), 1)
+
+#Define ouput functions
+results = args.results
+def print_results(results):
+    for i in (results):
+        print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i].replace("\n", ""), sep=('\t '))
+def print_magnets(results):
+    for i in (results):
+        print (i)
+        print (magnets[int(i)], sep=('\n'))
+def print_results_magnets(results):
+    for i in (results):
+        print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i].replace("\n", ""), magnets[i], sep=('\t '))
+def transmission(results):
+    for i in (results):
+        subprocess.call(['transmission-cli', (magnets[int(i)])])
+def print_header():
+    print ("Index  Seeders  Leachers Ratio    Title")
+def interactive():
+    command,selection=map(str,input("input [transmission: 1 2..] [print: 1 2 3...] : ").split(':'))
+    results = selection.split()
+    if command == "print":
+        print_magnets(results)
+    elif command == "transmission":
+        transmission(results)
+
+#Args and output
+if args.print and args.magnet:
+    print_results_magnets(results)
+elif args.print and not args.magnet:
+    print_results(results)
+elif args.magnet and not args.print:
+    print_magnets(results)
+elif args.transmission:
+    transmission(results)
+elif not args.print and not args.transmission and not args.magnet:
+    print_header(); print_results(results); interactive()
+
