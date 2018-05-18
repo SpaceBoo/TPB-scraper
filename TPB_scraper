@@ -89,3 +89,10 @@ elif args.transmission:
 elif not args.print and not args.transmission and not args.magnet:
     print_header(); print_results(results); interactive()
 
+##TO DO/FUTURE DIRECTIONS##
+# - add '--top' option to query top download pages
+# - - add multi-page support
+# - - - Make cron script to catalogue top 100 torrents every six hours
+# - add details including: user, filesize, date
+# - -add '--sort' features for date, user, size, seeders, etc.
+# - - - make an algorythmn that suggest best results given filesize, ratio, and seeders
