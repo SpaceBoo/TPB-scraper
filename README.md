@@ -14,21 +14,21 @@ Index  Seeders  Leachers Ratio    Title
 4        2121    426     5.0      The Avengers 2012 720p BRrip X264 - 1GB - YIFY
 5        814     73      11.2     Avengers.Infinity War.2018.720p.TS.1xBet
 
-input (transmission: [1 2..]) or (print: [1 2..]) :  transmission: 1 2
+input command :  transmission: 1 2
 
-uploading magnet link(s) (results) to transmission
+uploading magnet link(s) to transmission
 
 ...done
 
-archie@archlinux ~/code/TPB-scraper master $   
+archie@archlinux ~/code/TPB-scraper master $
 ```
 
 Also takes single-line commands for easier scripting:
 ```bash
-TPB_scraper -s Some Search --print --magnets --results 1 2 3 4 5 >> somefile.txt
+TPB_scraper --search Some Search --print --magnets --results 1 2 3 4 5 >> somefile.txt
 ```
 Prints the details and magnet links of the first five search results to somefile.txt
-I plan on using this to make a series of automation scripts in the future.
+I plan on using this fucntionality to make a series of automation scripts in the future.
 
 # Future Development
 Make a cron script to Download information on the top 100 torrents every 12 hours.
