@@ -9,20 +9,30 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument("--search", "-s", help="Provide a search term for TPB")
 parser.add_argument("--results", "-r", nargs='+', help="Specify selected results", type=int, default=[1, 2, 3, 4, 5])
+parser.add_argument("--Range", "-R", nargs=2, help="Specify a range of results", type=int)
+parser.add_argument("--top", "-T", help="Get the top 100 torrents from TPB", action="store_true")
 parser.add_argument("--print", "-p", help="Print the details for selcted search result(s)", action="store_true")
 parser.add_argument("--magnet", "-m", help="Prints the magnet links for selected search result(s)'", action="store_true")
 parser.add_argument("--transmission", "-t", help="Passes selected results to 'transmission-cli' for direct downloading", action="store_true")
 args = parser.parse_args()
 
-#Define search_term
-if args.search:
-    search_term = args.search
+if args.Range:
+    results = []
+    for i in range(args.Range[0], (args.Range[-1] + 1)):
+        results.append(i)
 else:
-    search_term = input('search term : ')
+    results = args.results
 
 #Download Webpage and Parse HTML
-webpage = "https://thepiratebay.org"
-page = requests.get(webpage + "/search/" + search_term)
+home_page = "https://thepiratebay.org"
+if args.search:
+    webpage = (home_page + "/search/" + args.search)    
+elif args.top:
+    webpage = (home_page + "/top/all")
+else:
+    search_term = input('search term : \033[1;32;40m ')
+    webpage = (home_page + "/search/" + search_term)
+page = requests.get(webpage)
 soup = BeautifulSoup(page.content, 'html.parser')
 
 #Generate Dictionaries of titles, seeders, leachers, ratios, and magnets
@@ -53,7 +63,6 @@ for result in range(1,search_result):
         ratios[result] = round((seeders[result])/(leachers[result]), 1)
 
 #Define ouput functions
-results = args.results
 def print_results(results):
     for i in (results):
         print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i].replace("\n", ""), sep=('\t '))
@@ -70,12 +79,14 @@ def transmission(results):
 def print_header():
     print ("Index  Seeders  Leachers Ratio    Title")
 def interactive():
-    command,selection=map(str,input("input [transmission: 1 2..] [print: 1 2 3...] : ").split(':'))
+    command,selection = map(str,input("\n\033 [transmission: 1 2..] [print: 1 2 3...] : \033[1;32;40m ").split(':'))
     results = selection.split()
     if command == "print":
+        print ("\n")
         print_magnets(results)
     elif command == "transmission":
-        transmission(results)
+        print ("\n\033[1;37;40muploading magnet link(s) (results) to transmission\n...done")
+        #transmission(results)
 
 #Args and output
 if args.print and args.magnet:
@@ -89,10 +100,11 @@ elif args.transmission:
 elif not args.print and not args.transmission and not args.magnet:
     print_header(); print_results(results); interactive()
 
-##TO DO/FUTURE DIRECTIONS##
-# - add '--top' option to query top download pages
-# - - add multi-page support
-# - - - Make cron script to catalogue top 100 torrents every six hours
-# - add details including: user, filesize, date
-# - -add '--sort' features for date, user, size, seeders, etc.
-# - - - make an algorythmn that suggest best results given filesize, ratio, and seeders
+print (results)
+
+###TO DO###
+#-Add top function to query top pages
+#--Add multipage support
+#---Make a cron script that DL's information on top 100 torrents from TPB everyday
+#-Error coding
+#-Include better support for spaces and strange char.
