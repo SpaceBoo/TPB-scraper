@@ -1,5 +1,5 @@
 # TPB-scraper
-A simple python scraper which uses beautiful soup to parse and return information. Output can be piped, re-directed, or passed directly to transmission-cli for download. TPB-scraper takes a wide range of arguments and can functions both interactively for convience and directly; using single line commands for easy automation and scripting.
+A simple python scraper which uses beautiful soup to parse and return data from The PirateBay. Output can be piped, re-directed, or passed directly to transmission-cli for easy download. TPB-scraper takes a wide range of arguments and can function both interactively for convience and directly; using single line commands for easy automation and scripting.
 
 An example of an interactive session, ideal for headless torrent-boxes without graphical support:
 ```bash
@@ -22,11 +22,10 @@ An example of a scripting/automation data-collection project:
 TPB_scraper --top -range 1 100
 ```
 This command writes the details of the top 100 torrents to a file. Output is tab-delimited with one entry per line, ideal for importing into a database.
-As a crontab entry:
 ```bash
 0 12 * * * TPB_scraper --top -range 1 100 > ~/TPBS/Data_Files/$(date '+%Y-%m-%d')
 ```
-This crontab entry collects and writes the data daily to a file named for the date.
+As a crontab entry, data is collected daily and written to a file named for the date.
 
 # Future Development
 For future development I plan to collect data daily through the use of cron-tab entries and compile this data into a database potentially JSON or SQL. This data will eventually be used for something interesting, idk I haven't thought that far yet.
