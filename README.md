@@ -1,5 +1,5 @@
 # TPB-scraper
-A simple python scraper which uses beautiful soup to scrape and return information which can then be printed or passed directly to transmission-cli for download. It takes a wide range of arguments and can functions both interactively for convience and directly; using single line commands for easy automation and scripting.
+A simple python scraper which uses beautiful soup to parse and return information. Output can be piped, re-directed, or passed directly to transmission-cli for download. TPB-scraper takes a wide range of arguments and can functions both interactively for convience and directly; using single line commands for easy automation and scripting.
 
 An example of an interactive session, ideal for headless torrent-boxes without graphical support:
 ```bash
