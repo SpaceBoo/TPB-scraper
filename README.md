@@ -11,19 +11,20 @@ Index  Seeders  Leachers Ratio    Title
 3        3003    643     4.7      Avengers: Age of Ultron (2015) 1080p BrRip x264 - YIFY
 4        2121    426     5.0      The Avengers 2012 720p BRrip X264 - 1GB - YIFY
 5        814     73      11.2     Avengers.Infinity War.2018.720p.TS.1xBet
-input command :  transmission: 1 2
-uploading magnet link(s) to transmission
+issue command 'print' or 'transmission' followed the media you wish to act upon
+command  : transmission 2 
+uploading  Avengers Infinity War 2018 720p TS x264 AAC TiTAN (index:2)  magnet  to transmission
 ...done
 archie@archlinux ~/code/TPB-scraper master $
 ```
 
 An example of a scripting/automation data-collection project: 
 ```bash
-TPB_scraper --top -range 1 100
+TPB_scraper --top --print --range 1 100
 ```
 This command writes the details of the top 100 torrents to a file. Output is tab-delimited with one entry per line, ideal for importing into a database.
 ```bash
-0 12 * * * TPB_scraper --top -range 1 100 > ~/TPBS/Data_Files/$(date '+%Y-%m-%d')
+0 12 * * * TPB_scraper --top --print  --range 1 100 > ~/TPBS/Data_Files/$(date '+%Y-%m-%d')
 ```
 As a crontab entry, data is collected daily and written to a file named for the date.
 
