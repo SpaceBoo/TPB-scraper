@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
 import requests
-import sys
+#import sys
 from bs4 import BeautifulSoup
 import argparse
 import subprocess
 
-#Parse Arguments
+# parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--search", "-s", help="Provide a search term for TPB")
-parser.add_argument("--results", "-r", nargs='+', help="Specify selected results", type=int, default=[1, 2, 3, 4, 5])
-parser.add_argument("--Range", "-R", nargs=2, help="Specify a range of results", type=int)
 parser.add_argument("--top", "-T", help="Get the top 100 torrents from TPB", action="store_true")
 parser.add_argument("--print", "-p", help="Print the details for selcted search result(s)", action="store_true")
-parser.add_argument("--magnet", "-m", help="Prints the magnet links for selected search result(s)'", action="store_true")
 parser.add_argument("--transmission", "-t", help="Passes selected results to 'transmission-cli' for direct downloading", action="store_true")
+parser.add_argument("--results", "-r", nargs='+', help="Specify selected results", type=int, default=[1, 2, 3, 4, 5])
+parser.add_argument("--range", "-R", nargs=2, help="Specify a range of results", type=int)
 args = parser.parse_args()
 
-if args.Range:
+# specify search results to be dislplayed or acted upon
+# if not specified using --range or --results the default is 1 - 5
+if args.range:
     results = []
-    for i in range(args.Range[0], (args.Range[-1] + 1)):
+    for i in range(args.range[0], (args.range[-1] + 1)):
         results.append(i)
 else:
     results = args.results
@@ -30,18 +31,18 @@ if args.search:
 elif args.top:
     webpage = (home_page + "/top/all")
 else:
-    search_term = input('search term : \033[1;32;40m ')
+    search_term = input('search term : ')
     webpage = (home_page + "/search/" + search_term)
 page = requests.get(webpage)
 soup = BeautifulSoup(page.content, 'html.parser')
 
-#Generate Dictionaries of titles, seeders, leachers, ratios, and magnets
-search_result = 0; titles = {}; seeders = {} ;leachers = {}; ratios = {}; magnets = {} 
+#### generate dictionaries of titles, seeders, leachers, ratios, and magnets
+search_result = 0; titles = {}; seeders = {} ;leachers = {}; ratios = {}; magnets = {}; data = {}
 table = soup.find("table", id="searchResult")
 for tr in table.find_all("tr"):
     for td in tr.find_all("td"):
         if td.find(class_="detName"):
-            titles[search_result] = (td.find(class_="detName")).get_text()
+            titles[search_result] = ((td.find(class_="detName")).get_text().replace("\n", ""))
             link_order = 1
             tag_order = 1
             for link in td.find_all("a"):
@@ -56,55 +57,97 @@ for tr in table.find_all("tr"):
                 leachers[search_result] = float(td.get_text())
             tag_order += 1
     search_result += 1
+#ratios    
 for result in range(1,search_result): 
     if seeders[result] == 0 or leachers[result] == 0:
         ratios[result] = 0
     else:
         ratios[result] = round((seeders[result])/(leachers[result]), 1)
+#full_output for scripting use
+full_output = {}
+for i in range(1, search_result):
+    full_output[i] = {'magnets': magnets[i],'ratios': ratios[i],'leachers': leachers[i],'seeders': seeders[i],'titles': titles[i]}
 
-#Define ouput functions
-def print_results(results):
-    for i in (results):
-        print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i].replace("\n", ""), sep=('\t '))
-def print_magnets(results):
-    for i in (results):
-        print (i)
-        print (magnets[int(i)], sep=('\n'))
-def print_results_magnets(results):
-    for i in (results):
-        print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i].replace("\n", ""), magnets[i], sep=('\t '))
-def transmission(results):
-    for i in (results):
-        subprocess.call(['transmission-cli', (magnets[int(i)])])
+### define ouput functions
 def print_header():
-    print ("Index  Seeders  Leachers Ratio    Title")
-def interactive():
-    command,selection = map(str,input("\n\033 [transmission: 1 2..] [print: 1 2 3...] : \033[1;32;40m ").split(':'))
-    results = selection.split()
-    if command == "print":
-        print ("\n")
-        print_magnets(results)
-    elif command == "transmission":
-        print ("\n\033[1;37;40muploading magnet link(s) (results) to transmission\n...done")
-        #transmission(results)
+    print ("Index   Seeders Leachers Ratio                        Title")
+def print_results(results):
+    print_header()
+    print ("\n")
+    for i in results:
+        print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i], "\n", magnets[i], "\n\n", sep=('\t '))
+def transmission(results):
+    for i in results:
+        subprocess.call(['transmission-cli', (magnets[int(i)])])
+def interactive(results):
+    print_header()
+    for i in (results):  
+        print (i, int(seeders[i]),  int(leachers[i]),  ratios[i], titles[i].replace("\n", ""), sep=('\t '))
+    action = input("issue 'print' or 'transmission' followed the media you wish to act upon\nexample : transmission 1 2 3\ncommand  : ").split(' ')
+    actions = {}; action_count = 1
+    # this section looks longer than it needs to be, but it is more intuitive than previous versions. see bottom of script for previous version
+    for item in action:
+        actions[action_count] = (item)
+        action_count += 1
+    if actions[1] == "transmission":
+        results = []
+        for i in range(2, action_count):
+            results.append(int(actions[i]))
+        for i in results:
+            print ("\nuploading" + titles[i] + " (index:" + str(i) + ")  magnet  to transmission\n")
+            subprocess.call(['transmission-cli', (magnets[i])])
+    elif actions[2] == "transmission": # in case the user puts a space at the beginning of the input
+        results = []
+        for i in range(3, action_count):
+            results.append(int(actions[i]))
+        for i in results:
+            print ("\nuploading" + titles[i] + " (index:" + str(i) + ")  magnet  to transmission\n")
+            subprocess.call(['transmission-cli', (magnets[i])])
+        print ("\nuploading magnet link(s) (results) to transmission\n")
+        results = []
+        for i in range(3, action_count):
+            results.append(actions[i])
+        transmission(results)
+    elif actions[1] == "print":  
+        results = []
+        for i in range(2, action_count):
+            results.append(int(actions[i]))
+        for i in results:
+           print (titles[i], "\n", magnets[i], "\n")
+    elif actions[2] == "print":  
+        results = []
+        for i in range(3, action_count):
+            results.append(int(actions[i]))
+        for i in results:
+           print (titles[i], "\n", magnets[i], "\n")
+    
 
-#Args and output
-if args.print and args.magnet:
-    print_results_magnets(results)
-elif args.print and not args.magnet:
+### caller
+if args.print:
     print_results(results)
-elif args.magnet and not args.print:
-    print_magnets(results)
 elif args.transmission:
     transmission(results)
-elif not args.print and not args.transmission and not args.magnet:
-    print_header(); print_results(results); interactive()
+elif not args.print and not args.transmission: 
+    interactive(results)
 
-print (results)
 
-###TO DO###
-#-Add top function to query top pages
-#--Add multipage support
-#---Make a cron script that DL's information on top 100 torrents from TPB everyday
-#-Error coding
-#-Include better support for spaces and strange char.
+### review needed:
+# review scraper portion
+# think hard about new interactive section. is it really better? can it be split up into functions, or is that really any better?
+
+### old code to keep
+# print (i, int(full_output[i]['seeders']), int(full_output[i]['leachers']), full_output[i]['ratios'], full_output[i]['titles'].replace("\n", ""), sep=('\t'))
+
+## while seemingly simpler, the code below requires a delimeter to denote the difference between command and selection variables, which is unituitive for the user.
+# for example 'transmission 1' is more intuitive than 'transmission : 1'
+#def interactive():
+#    command,selection = map(str,input("\n\033 [transmission: 1 2..] [print: 1 2 3...] : \033[1;32;40m ").split(':'))
+#    results = selection.split()
+#    if command == "print":
+#        print ("\n")
+#        print_magnets(results)
+#    elif command == "transmission":
+#        print ("\n\033[1;37;40muploading magnet link(s) (results) to transmission\n...done")
+#        transmission(results)
+  # print (data[1])
+
