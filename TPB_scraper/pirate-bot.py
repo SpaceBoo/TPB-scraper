@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-# pirate-bot
-# https://github.com/SpaceBoo/TPB-scraper
-# piratebot --help
+"""
+pirate-bot
+https://github.com/SpaceBoo/TPB-scraper
+piratebot --help
+"""
 
 import json
 import argparse
