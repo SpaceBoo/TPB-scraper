@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+categories = {
+    #
+    '/All': 0,
+    '/All/Audio': 100,
+    '/All/Audio/Music': 101,
+    '/All/Audio/Audio books': 102,
+    '/All/Audio/Sound clips': 103,
+    '/All/Audio/FLAC': 104,
+    '/All/Audio/Other': 199,
+    #
+    '/All/Video': 200,
+    '/All/Video/Movies': 201,
+    '/All/Video/Movies DVDR': 202,
+    '/All/Video/Music Videos': 203,
+    '/All/Video/TV shows': 204,
+    '/All/Video/Handheld': 205,
+    '/All/Video/HD - Movies': 206,
+    '/All/Video/HD - TV shows': 207,
+    '/All/Video/3D': 208,
+    '/All/Video/Video = Other': 299,
+    #
+    '/All/Applications': 300,
+    '/All/Applications/Windows': 301,
+    '/All/Applications/Mac': 302,
+    '/All/Applications/UNIX': 303,
+    '/All/Applications/Handheld': 304,
+    '/All/Applications/IOS': 305,
+    '/All/Applications/Android': 306,
+    '/All/Applications/Other - OS': 307,
+    #
+    '/All/Games': 400,
+    '/All/Games/PC': 401,
+    '/All/Games/PSx': 402,
+    '/All/Games/XBOX': 403,
+    '/All/Games/Wii': 404,
+    '/All/Games/Handheld': 405,
+    '/All/Games/IOS': 406,
+    '/All/Games/Android': 407,
+    '/All/Games/Other': 499,
+    #
+    '/All/Porn//All/Porn': 500,
+    '/All/Porn/Movies': 501,
+    '/All/Porn/Movies DVDR': 502,
+    '/All/Porn/Games': 503,
+    '/All/Porn/HD - Movies': 504,
+    '/All/Porn/Movie Slips': 505,
+    '/All/Porn/Porn - Other': 599,
+    #
+    '/All/Other/Other': 600,
+    '/All/Other/E-books': 601,
+    '/All/Other/Comics': 602,
+    '/All/Other/Pictures': 603,
+    '/All/Other/Covers': 604,
+    '/All/Other/Physibles': 605,
+    '/All/Other/Other': 699
+}
