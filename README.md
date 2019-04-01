@@ -1,3 +1,6 @@
+**This repository has not been mainatined in some time**
+
+
 # PirateBot
 Piratebot allows users to scrape The Pirate Bay by category, top torrents, or searchterm.  Results can be viewed in the terminal, written to a file, or passed directly to transmission-cli for download. Piratebot is an excellent option for identifying torrents on a vps, torrent-box, or any computer where graphics may not be an option and integrates well into scripts with one line commands for automation and data collection.
  
