@@ -55,7 +55,7 @@ This command writes the details of the top 100 torrents to a file. Output is tab
 As a crontab entry, data is collected daily and written to a file named for the date.
 
 # Future Development
-For future development I plan to collect data daily through the use of cron-tab entries and compile this data into a database potentially JSON or SQL. This data will eventually be used for something interesting, idk I haven't thought that far yet.
+For future development I plan to collect data daily through the use of cron-tab entries and compile this data into a databasThis data will eventually be used for something interesting.
 
 Additional develoment:
 Add more fields including; user, date, and filesize.
