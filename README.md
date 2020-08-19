@@ -2,7 +2,7 @@
 
 
 # PirateBot
-Piratebot allows users to scrape The Pirate Bay by category, top torrents, or searchterm.  Results can be viewed in the terminal, written to a file, or passed directly to transmission-cli for download. Piratebot is an excellent option for identifying torrents on a vps, torrent-box, or any computer where graphics may not be an option and integrates well into scripts with one line commands for automation and data collection.
+Piratebot allows users to scrape meta-data and magnet links from the Pirate Bay specifically or en-masse. Results can be filtered by category, search term, or most popular, and displayed directly, written to a JSON, CSV, or other delimted file, or passed directly to transmission-cli for download. Piratebot is an excellent option for maximizing the functionality of torrent-boxes or vps's and excels at data collection and automatition (see example below). 
  
 # Features
 
@@ -21,7 +21,9 @@ Piratebot allows users to scrape The Pirate Bay by category, top torrents, or se
                         
 # Examples
 
-An example of an interactive session, ideal for headless torrent-boxes without graphical support:
+# Use as a seed box or vps
+
+An example of an interactive session, ideal for headless torrent-boxes :
 ```bash
 archie@archlinux $ ./TPB_scraper
 
@@ -43,24 +45,23 @@ uploading  Avengers Infinity War 2018 720p TS x264 AAC TiTAN (index:2)  magnet  
 ...done
 archie@archlinux $
 ```
+# Use in data collection/automation
 
 An example of a scripting/automation data-collection project: 
 ```bash
 TPB_scraper --top --print --range 1 100
 ```
-This command writes the details of the top 100 torrents to a file. Output is tab-delimited with one entry per line, ideal for importing into a database.
+This command writes the details of the top 100 torrents of the day to a file. Output is tab-delimited with one entry per line, ideal for importing into a database.
 ```bash
 0 12 * * * TPB_scraper --top --print  --range 1 100 > ~/TPBS/Data_Files/$(date '+%Y-%m-%d')
 ```
-As a crontab entry, data is collected daily and written to a file named for the date.
+As a crontab entry, the above line in /etc/crontab collects data daily and writes it to a file named after the date.
 
 # Future Development
-For future development I plan to collect data daily through the use of cron-tab entries and compile this data into a databasThis data will eventually be used for something interesting.
+For future development I plan to collect data daily through the use of cron-tab entries and compile this data into a database. This data will eventually be used to model the popularity of top torrents over time. These models may be used to optimize networks of seed-boxes by predicting the trajectory of a files' popularity and allowing the network to allocate resources to fit these predictions.
 
 Additional develoment:
-Add more fields including; user, date, and filesize.
-
-Make a algorythmn to suggest the best downloads based on filesize, ratio, and seeders.
+Filter by user, date, and filesize.
 
 Add error support and error codes.
 
