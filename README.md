@@ -1,4 +1,4 @@
-**This repository has not been mainatined in some time**
+**This repository has not been maintained in some time**
 
 
 # PirateBot
