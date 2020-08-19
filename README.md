@@ -2,7 +2,7 @@
 
 
 # PirateBot
-Piratebot allows users to scrape meta-data and magnet links from the Pirate Bay specifically or en-masse. Results can be filtered by category, search term, or most popular, and displayed directly, written to a JSON, CSV, or other delimted file, or passed directly to transmission-cli for download. Piratebot is an excellent option for maximizing the functionality of torrent-boxes or vps's and excels at data collection and automatition (see example below). 
+Piratebot allows users to scrape meta-data and magnet links from the Pirate Bay specifically or en-masse. Results can be filtered by category, search term, or most popular, and displayed directly, written to a JSON, CSV, or other delimted file, or passed directly to transmission-cli for download. Piratebot is an excellent option for maximizing the functionality of torrent-boxes or vps's and excels at data collection and automatition (see examples below). 
  
 # Features
 
