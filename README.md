@@ -7,18 +7,19 @@ Piratebot allows users to scrape meta-data and magnet links from the Pirate Bay 
 # Features
 
 # Arguments
-  `-h, --help            show this help message and exit
+```bash
+ -h, --help            show this help message and exit  
   --search SEARCH, -s SEARCH
-                        specify a search-term
-  --top, -T             scrape the top 100 torrents of the day
-  --transmission, -t    passes selected results to 'transmission-cli' for downloading
-  --json, -j            pretty print the details of specified result(s) as json
-  --print, -p           print the details of specified result(s) as plain text
-  --results RESULTS [RESULTS ...], -r RESULTS [RESULTS ...]
-                        specify selected results to act upon
-  --range RANGE RANGE, -R RANGE RANGE
-                        specify a range of results to act upon`
-                        
+                        specify a search-term  
+  --top, -T             scrape the top 100 torrents of the day  
+  --transmission, -t    passes selected results to 'transmission-cli' for downloading  
+  --json, -j            pretty print the details of specified result(s) as json  
+  --print, -p           print the details of specified result(s) as plain text\
+  --results RESULTS [RESULTS ...], -r RESULTS [RESULTS ...]  
+                        specify selected results to act upon  
+  --range RANGE RANGE, -R RANGE RANGE    
+                        specify a range of results to act upon
+ ```                       
 # Examples
 
 # Use as a seed box or vps
